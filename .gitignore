@@ -1,0 +1,12 @@
+# Dependencias
+node_modules/
+
+# Datos del servidor de push (se generan al vuelo)
+server/subscriptions.json
+
+# Artefactos de despliegue
+*.zip
+
+# Sistema
+.DS_Store
+Thumbs.db
