@@ -4,7 +4,7 @@
 //  - Recibe notificaciones push (cuando despliegues el servidor de /server).
 // ============================================================================
 
-const CACHE = 'cumbre-v1';
+const CACHE = 'cumbre-v2';
 const ASSETS = [
   './',
   './index.html',

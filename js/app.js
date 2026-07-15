@@ -76,7 +76,7 @@ function renderHoy() {
   const actions = Store.todaysActions();
   const now = new Date();
   const dateStr = now.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
-  const { topic, item } = getDailyFact(dayNumber(now), Store.activeTopics());
+  const { topic, item } = getDailyFact(dayNumber(now), Store.factTopics());
   const hour = now.getHours();
   const greeting = hour < 6 ? 'Buenas noches' : hour < 13 ? 'Buenos días' : hour < 20 ? 'Buenas tardes' : 'Buenas noches';
 
@@ -119,7 +119,7 @@ function renderHoy() {
   </div>
 
   <div style="margin-top:12px" class="daily">
-    <span class="tag">${icon('bulb', 14)} ${esc(topic.label)} · dato del día</span>
+    <span class="tag">${icon(topic.icon || 'bulb', 14)} ${esc(topic.label)} · dato del día</span>
     <h3>${esc(item.t)}</h3>
     <p>${esc(item.d)}</p>
     <div class="kicker">${icon('calendar', 13)} Un aprendizaje nuevo cada día</div>
@@ -287,9 +287,6 @@ function renderForm(editId) {
   const types = [['goal', 'Meta con hitos'], ['habit', 'Hábito diario'], ['task', 'Tarea suelta']]
     .map(([v, l]) => `<button type="button" class="chip ${m.type === v ? 'active' : ''}" data-act="pick-type" data-type="${v}">${l}</button>`).join('');
 
-  const topicOpts = ['<option value="">Sin tema</option>']
-    .concat(TOPICS.map(t => `<option value="${t.id}" ${m.topic === t.id ? 'selected' : ''}>${t.label}</option>`)).join('');
-
   const rowInputs = (arr, cls, ph) => {
     const items = arr.length ? arr : [''];
     return items.map(v => `<div class="rowitem">
@@ -325,12 +322,6 @@ function renderForm(editId) {
     </div>
 
     <div class="field">
-      <label>Tema para el "dato del día"</label>
-      <select id="f-topic">${topicOpts}</select>
-      <div class="hint">La app te enseñará algo nuevo de este tema cada día.</div>
-    </div>
-
-    <div class="field">
       <label>Escalones a la cima (hitos)</label>
       <div class="rowlist" id="f-milestones">${rowInputs(m.milestones, 'ms-input', 'Ej. Conversación de 5 min')}</div>
       <button type="button" class="addrow" data-act="add-row" data-target="f-milestones" data-cls="ms-input" data-ph="Nuevo escalón">${icon('plus', 16)} Añadir escalón</button>
@@ -350,6 +341,10 @@ function renderForm(editId) {
 
 function renderSettings() {
   const s = Store.state.settings;
+  const chosen = s.factTopics || [];
+  const topicChips = TOPICS.map(t =>
+    `<button type="button" class="chip ${chosen.includes(t.id) ? 'active' : ''}" data-act="toggle-topic" data-id="${t.id}">${icon(t.icon, 16)} ${esc(t.label)}</button>`
+  ).join('');
   const perm = Notifs.permission();
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
   const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
@@ -387,6 +382,13 @@ function renderSettings() {
     </div>
   </div>
   <div class="hint" style="margin:8px 2px 0">Ahora mismo el aviso salta cuando abres la app pasada tu hora. El aviso automático con la app cerrada se activa al desplegar el servidor de push (ver README).</div>
+
+  <div class="section-label">Dato del día</div>
+  <div class="card">
+    <div style="font-size:13px;color:var(--muted);margin-bottom:10px">Temas sobre los que quieres aprender algo nuevo cada día:</div>
+    <div class="chips">${topicChips}</div>
+    <div class="hint" style="margin-top:10px">Rotan un día cada uno. Si no eliges ninguno, te daré una píldora de motivación.</div>
+  </div>
 
   <div class="section-label">Tus datos</div>
   <div class="card">
@@ -499,6 +501,10 @@ document.addEventListener('click', (e) => {
       break;
 
     // Ajustes
+    case 'toggle-topic':
+      Store.toggleFactTopic(el.dataset.id);
+      render();
+      break;
     case 'export': doExport(); break;
     case 'import-click': $('#import-file').click(); break;
     case 'reset':
@@ -528,7 +534,6 @@ document.addEventListener('submit', (e) => {
     why: $('#f-why').value.trim(),
     type: ($('#f-type .chip.active')?.dataset.type) || 'goal',
     color: ($('#f-color .swatch.active')?.dataset.color) || 'teal',
-    topic: $('#f-topic').value,
     milestones: $$('#f-milestones .ms-input').map(i => i.value.trim()).filter(Boolean),
     dailyActions: $$('#f-actions .act-input').map(i => i.value.trim()).filter(Boolean),
   };

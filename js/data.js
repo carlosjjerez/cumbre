@@ -33,6 +33,9 @@ const ICONS = {
   calendar: '<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 9h16M8 3v4M16 3v4"/>',
   book: '<path d="M4 5a2 2 0 0 1 2 -2h8v16h-8a2 2 0 0 0 -2 2zM14 3h4a2 2 0 0 1 2 2v14a2 2 0 0 0 -2 -2h-4"/>',
   run: '<circle cx="14" cy="5" r="2"/><path d="M12 8l-2 3l3 2v5M10 11l-4 -1M13 13l3 1l1 3"/>',
+  landmark: '<path d="M3 21h18M5 21v-8M9.5 21v-8M14.5 21v-8M19 21v-8M3 10l9 -7l9 7z"/>',
+  cpu: '<rect x="5" y="5" width="14" height="14" rx="1"/><rect x="9" y="9" width="6" height="6"/><path d="M10 3v2M14 3v2M10 19v2M14 19v2M3 10h2M3 14h2M19 10h2M19 14h2"/>',
+  moto: '<circle cx="5" cy="16" r="3"/><circle cx="19" cy="16" r="3"/><path d="M8 16h6l4 -7h-3M15 9l-1.5 -2.5h-2.5"/>',
   chevronRight: '<path d="M9 6l6 6l-6 6"/>',
 };
 
@@ -55,6 +58,9 @@ function paletteOf(id) { return PALETTE.find(p => p.id === id) || PALETTE[0]; }
 
 // --- Temas del "dato del día" ----------------------------------------------
 const TOPICS = [
+  { id: 'historia',     label: 'Historia',      icon: 'landmark' },
+  { id: 'tecnologia',   label: 'Tecnología',    icon: 'cpu' },
+  { id: 'motociclismo', label: 'Motociclismo',  icon: 'moto' },
   { id: 'motivacion',   label: 'Motivación',    icon: 'flame' },
   { id: 'ingles',       label: 'Inglés',        icon: 'book' },
   { id: 'running',      label: 'Running',       icon: 'run' },
@@ -68,6 +74,48 @@ function topicOf(id) { return TOPICS.find(t => t.id === id) || TOPICS[0]; }
 // --- Píldoras de aprendizaje ------------------------------------------------
 // Cada item: { t: título/término, d: explicación breve }
 const CONTENT = {
+  historia: [
+    { t: 'Cleopatra y las pirámides', d: 'Cleopatra vivió más cerca en el tiempo del iPhone que de la construcción de las pirámides de Guiza: la separaban 2.500 años de ellas y solo 2.000 de ti.' },
+    { t: 'La primera vuelta al mundo', d: 'La expedición de Magallanes y Elcano (1519-1522) zarpó con 5 naves y unos 250 hombres. Tres años después volvieron 18, en un solo barco. Pero lo lograron.' },
+    { t: 'El imperio del sol eterno', d: 'Con Felipe II se decía que en el imperio español "no se ponía el sol": tenía territorios en Europa, América, África y Asia. Y se gobernaba a golpe de carta y meses de barco.' },
+    { t: 'El hormigón romano', d: 'El Panteón de Roma, con 1.900 años, sigue siendo la cúpula de hormigón sin armar más grande del mundo. Su mezcla con ceniza volcánica se "autorrepara" con el agua.' },
+    { t: 'Gutenberg cambió el mundo', d: 'Antes de la imprenta (~1440), copiar un libro llevaba meses. Después, cientos en días. Fue la mayor democratización del conocimiento hasta internet.' },
+    { t: 'Córdoba, capital del saber', d: 'En el siglo X, la Córdoba de Al-Ándalus era una de las mayores ciudades del mundo: calles iluminadas, baños públicos y bibliotecas con cientos de miles de volúmenes.' },
+    { t: 'El Coliseo y tus entradas', d: 'El Coliseo tenía 76 accesos numerados y las teselas de entrada indicaban puerta y grada, como en un estadio moderno. 50.000 personas entraban y salían en minutos.' },
+    { t: 'La guerra de los Cien Años', d: 'Duró en realidad 116 años (1337-1453). Los nombres históricos a veces redondean... y mucho.' },
+    { t: 'Ötzi, el hombre de hielo', d: 'En 1991 apareció en los Alpes una momia natural de 5.300 años, con su ropa, su arco y 61 tatuajes. Murió de un flechazo: el "caso abierto" más antiguo del mundo.' },
+    { t: 'El muro cayó por un despiste', d: 'El 9 de noviembre de 1989, un portavoz de la RDA anunció por error que se podía cruzar "de inmediato". Miles de berlineses fueron a los pasos esa misma noche y el muro cayó.' },
+    { t: 'Turing y Enigma', d: 'Descifrar la máquina nazi Enigma acortó la II Guerra Mundial, según los historiadores, entre 2 y 4 años. De aquel trabajo secreto nació buena parte de la informática.' },
+    { t: 'Alejandría no ardió en un día', d: 'La gran biblioteca no se perdió en un único incendio: se apagó durante siglos por recortes, guerras y abandono. Las cosas grandes no mueren de golpe, sino por descuido.' },
+  ],
+  tecnologia: [
+    { t: 'El primer bug fue un bicho', d: 'En 1947, el ordenador Mark II falló por una polilla atrapada en un relé. La pegaron con celo en el cuaderno de incidencias: "primer caso real de bug encontrado".' },
+    { t: 'Internet nació diciendo "LO"', d: 'El primer mensaje de ARPANET (1969) iba a ser "LOGIN", pero el sistema se cayó en la tercera letra. El primer mensaje de la red de redes fue "LO".' },
+    { t: 'El GPS necesita a Einstein', d: 'Los satélites GPS corrigen sus relojes según la relatividad: sin ese ajuste, tu posición acumularía unos 10 km de error cada día.' },
+    { t: 'El objeto más fabricado', d: 'El transistor (1947) es el objeto más producido de la historia humana: el chip de tu móvil contiene miles de millones. Y caben en tu bolsillo.' },
+    { t: 'El primer SMS', d: 'Se envió en diciembre de 1992 desde un ordenador a un móvil Orbitel 901. Decía "Merry Christmas". Hoy enviamos billones de mensajes al año.' },
+    { t: 'Kodak inventó su final', d: 'Kodak creó la cámara digital en 1975... y la guardó en un cajón por miedo a matar el negocio del carrete. En 2012 quebró. Si no te reinventas tú, te reinventan.' },
+    { t: 'La madre de todas las demos', d: 'En 1968, Douglas Engelbart presentó en 90 minutos el ratón, las ventanas, el hipertexto y la videollamada. El mundo tardó 40 años en ponerse al día.' },
+    { t: 'La Web fue un regalo', d: 'Internet y la Web no son lo mismo: la red existía desde los 70; las páginas las inventó Tim Berners-Lee en 1989 en el CERN... y regaló el invento al mundo, sin patente.' },
+    { t: 'La primera webcam', d: 'Vigilaba una cafetera en la Universidad de Cambridge (1991): los informáticos querían saber si quedaba café sin levantarse. Así nace la tecnología: de una molestia.' },
+    { t: 'El QR nació en una fábrica', d: 'El código QR lo creó Denso Wave (grupo Toyota) en 1994 para rastrear piezas de coche. Hoy paga cafés, abre menús y factura embarques.' },
+    { t: 'Bluetooth, rey vikingo', d: 'Se llama así por Harald "Diente Azul", el rey que unió Dinamarca y Noruega, igual que el estándar une dispositivos. El logo son sus iniciales en runas.' },
+    { t: 'Los CAPTCHA con doble uso', d: 'Durante años, cada reCAPTCHA que resolvías ayudaba a digitalizar palabras de libros antiguos que el OCR no entendía. Millones de personas transcribieron bibliotecas sin saberlo.' },
+  ],
+  motociclismo: [
+    { t: 'Ángel Nieto: 12+1', d: 'El grande del motociclismo español ganó 13 mundiales, pero por superstición siempre dijo "12+1". Sigue entre los pilotos con más títulos de la historia.' },
+    { t: '366 km/h sobre dos ruedas', d: 'El récord de velocidad en MotoGP es de Brad Binder: 366,1 km/h en Mugello (2023). Más rápido que un AVE... con el cuerpo al aire.' },
+    { t: 'El contramanillar', d: 'A partir de ~30 km/h las motos giran "al revés": empujas suavemente el puño del lado hacia el que quieres ir. Tu cuerpo ya lo hace sin que lo sepas; entenderlo te da control.' },
+    { t: 'Una carrera = 2 kg menos', d: 'Un piloto de MotoGP pierde entre 1,5 y 3 kg por carrera: 45 minutos de esfuerzo máximo dentro de un mono de cuero a más de 50 °C.' },
+    { t: 'Rossi, 9 coronas', d: 'Valentino Rossi ganó 9 mundiales a lo largo de 26 temporadas, con títulos en 125, 250, 500 y MotoGP. Nadie ha dominado tantas eras distintas del motociclismo.' },
+    { t: 'Márquez, el más precoz', d: 'Marc Márquez se convirtió en 2013, con 20 años, en el campeón más joven de la categoría reina. Su estilo al límite cambió lo que se creía posible sobre una moto.' },
+    { t: 'La primera moto era de madera', d: 'La "Reitwagen" de Daimler y Maybach (1885) tenía el cuadro de madera y un pequeño motor de gasolina. De ahí a 366 km/h en 140 años.' },
+    { t: 'Inclinados a 60 grados', d: 'En MotoGP se toman curvas con más de 60° de inclinación. Rodilla y codo rozan el asfalto: no es espectáculo, son "sensores" para medir cuánto más pueden tumbar.' },
+    { t: 'ATGATT', d: '"All The Gear, All The Time": todo el equipo, siempre. La mayoría de lesiones graves se evitan con casco integral, guantes y chaqueta con protecciones. También en trayectos cortos.' },
+    { t: 'Mira a donde quieres ir', d: 'La moto va donde miras. Clavar la vista en el obstáculo ("target fixation") es causa de muchas salidas de vía. Entrena la mirada: lejos y a la salida de la curva.' },
+    { t: 'Isla de Man TT', d: 'La carrera más antigua (1907) y extrema del mundo: carreteras públicas entre muros y casas, a más de 215 km/h de media por vuelta. Leyenda pura.' },
+    { t: 'El 70% de tu frenada', d: 'El freno delantero aporta el 70-80% de la capacidad de frenar. Fiarlo todo al trasero por miedo alarga la distancia de frenado. Practica la frenada progresiva.' },
+  ],
   motivacion: [
     { t: 'Empieza pequeño', d: 'Un objetivo de 2 minutos es imposible de aplazar. La constancia nace de lo diminuto, no de lo heroico.' },
     { t: 'La regla de no fallar dos veces', d: 'Fallar un día es un accidente; fallar dos es el principio de un hábito nuevo. Vuelve siempre al día siguiente.' },

@@ -45,6 +45,7 @@ function defaultState() {
       reminderTime: '08:00',
       lastNotifiedDay: '',
       pushSubscribed: false,
+      factTopics: ['historia', 'tecnologia', 'motociclismo'],
     },
   };
 }
@@ -225,13 +226,18 @@ const Store = {
     return this.state.mountains.filter(m => m.completedAt);
   },
 
-  activeTopics() {
-    const set = [];
-    for (const m of this.state.mountains) {
-      if (m.completedAt) continue;
-      if (m.topic && !set.includes(m.topic)) set.push(m.topic);
-    }
-    return set.length ? set : ['motivacion'];
+  // Temas elegidos para el "dato del día" (se configuran en Ajustes)
+  factTopics() {
+    const t = this.state.settings.factTopics;
+    return (t && t.length) ? t : ['motivacion'];
+  },
+
+  toggleFactTopic(id) {
+    let t = this.state.settings.factTopics || [];
+    if (t.includes(id)) t = t.filter(x => x !== id);
+    else t = t.concat(id);
+    this.state.settings.factTopics = t;
+    this.save();
   },
 
   // --- Ajustes --------------------------------------------------------------
